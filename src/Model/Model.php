@@ -17,16 +17,15 @@ class Model
     public static function all()
     {
         $table = static::getTable(); // static:: est $this en static
-        $sql = 'SELECT * FROM '.$table;
+        $sql = 'SELECT * FROM books INNER JOIN authors ON books.id_author = authors.id';
         $query = Database::get()->query($sql);
-
         return $query->fetchAll();
     }
 
     public static function find($id)
     {
         $table = static::getTable(); // static:: est $this en static
-        $sql = "SELECT * FROM $table WHERE id = :id";
+        $sql = 'SELECT * FROM books INNER JOIN authors ON books.id_author = authors.id WHERE books.id = :id';
         $query = Database::get()->prepare($sql);
         $query->execute(['id' => $id]);
 
@@ -51,5 +50,13 @@ class Model
         $query = Database::get()->prepare($sql);
 
         return $query->execute($values);
+    }
+    function addMessage($message){
+        $_SESSION['message'] = $message;
+    }
+    function getmessage(){
+        $message = $_SESSION['message'] ?? null;
+        unset($_SESSION['message']);
+        return $message;
     }
 }
